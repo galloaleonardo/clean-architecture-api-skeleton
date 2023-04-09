@@ -1,0 +1,28 @@
+{
+  "name": "clean-architecture-api-skeleton",
+  "version": "1.0.0",
+  "main": "src/infrastructure/api/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/infrastructure/api/index.ts",
+    "migrate:dev": "knex --knexfile ./src/infrastructure/database/connection-config.ts migrate:latest --env development"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "knex": "^2.4.2",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "eslint": "^8.37.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "sqlite3": "^5.1.6",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.0.4"
+  }
+}
