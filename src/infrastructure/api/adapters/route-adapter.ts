@@ -18,4 +18,10 @@ export const routeAdapter = <T>(controller: Controller<T>) => async (request: Re
       .json(controllerResponse.body);
     return next();
   })
-  .catch((error: DefaultApplicationError) => next(error));
+  .catch((error: DefaultApplicationError) => {
+    response
+      .status(error.statusCode)
+      .json({ errorType: error.name, errorMessage: error.message });
+
+    next();
+  });
