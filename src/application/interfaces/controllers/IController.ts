@@ -2,6 +2,6 @@
 import { RequestModel } from '../requests/RequestModel';
 import { ResponseModel } from '../responses/ResponseModel';
 
-export interface Controller<T> {
+export interface IController<T> {
   handle(data: RequestModel): Promise<ResponseModel<T>>
 }

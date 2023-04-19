@@ -2,19 +2,19 @@
 /* eslint-disable no-unused-vars */
 
 import { ValidationError } from '../../../application/errors/ValidationError';
-import { Controller } from '../../../application/interfaces/controllers/Controller';
+import { IController } from '../../../application/interfaces/controllers/IController';
 import { RequestModel } from '../../../application/interfaces/requests/RequestModel';
 import { ResponseHandler } from '../../../application/interfaces/responses/ResponseHandler';
 import { ResponseModel } from '../../../application/interfaces/responses/ResponseModel';
 import { CreateUserDataIncomplete } from '../../../domain/models/user/data/CreateUserDataIncomplete';
 import { User } from '../../../domain/models/user/User';
-import { CreateUserUseCase } from '../../../domain/use-cases/user/CreateUserUseCase';
+import { ICreateUserUseCase } from '../../../domain/use-cases/user/ICreateUserUseCase';
 
 type RequestOptionalBody = RequestModel<CreateUserDataIncomplete>;
 
-export class CreateUserController implements Controller<User | never> {
+export class CreateUserController implements IController<User | never> {
   constructor(
-    private readonly createUser: CreateUserUseCase,
+    private readonly createUser: ICreateUserUseCase,
     private readonly presenter: ResponseHandler<User>,
   ) {}
 

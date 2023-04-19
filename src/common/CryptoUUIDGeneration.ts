@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
-import { UUIDGenerator } from '../application/interfaces/helpers/UUIDGenerator';
+import { IUUIDGenerator } from '../application/interfaces/helpers/IUUIDGenerator';
 
-export class CryptoUUIDGeneration implements UUIDGenerator {
+export class CryptoUUIDGeneration implements IUUIDGenerator {
   make(): string {
     return randomUUID();
   }

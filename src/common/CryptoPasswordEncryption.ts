@@ -1,7 +1,7 @@
-import { randomBytes, pbkdf2 } from 'crypto';
-import { PasswordHashing } from '../application/interfaces/security/PasswordHashing';
+import { randomBytes, pbkdf2Sync } from 'crypto';
+import { IPasswordHashing } from '../application/interfaces/security/IPasswordHashing';
 
-export class CryptoPasswordEncryption implements PasswordHashing {
+export class CryptoPasswordEncryption implements IPasswordHashing {
   private readonly saltSize: number = 16;
 
   private readonly iterations: number = 100000;
@@ -10,32 +10,20 @@ export class CryptoPasswordEncryption implements PasswordHashing {
 
   private readonly digest: string = 'sha512';
 
-  async hash(password: string): Promise<string> {
+  hash(password: string): string {
     const salt = randomBytes(this.saltSize).toString('hex');
 
-    const hash = await new Promise<string>((resolve, reject) => {
-      pbkdf2(password, salt, this.iterations, this.keylen, this.digest, (err, derivedKey) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(derivedKey.toString('hex'));
-      });
-    });
+    const derivedKey = pbkdf2Sync(password, salt, this.iterations, this.keylen, this.digest);
 
-    return `${salt}:${hash}`;
+    return `${salt}:${derivedKey.toString('hex')}`;
   }
 
-  async compare(password: string, hash: string): Promise<boolean> {
+  compare(password: string, hash: string): boolean {
     const [salt, originalHash] = hash.split(':');
 
-    const hashedPassword = await new Promise<string>((resolve, reject) => {
-      pbkdf2(password, salt, this.iterations, this.keylen, this.digest, (err, derivedKey) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(derivedKey.toString('hex'));
-      });
-    });
+    const derivedKey = pbkdf2Sync(password, salt, this.iterations, this.keylen, this.digest);
+
+    const hashedPassword = derivedKey.toString('hex');
 
     return originalHash === hashedPassword;
   }

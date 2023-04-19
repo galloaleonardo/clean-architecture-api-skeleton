@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<void> {
     t.string('email').notNullable().unique();
     t.string('first_name').notNullable();
     t.string('last_name').notNullable();
-    t.string('password_hash').notNullable();
+    t.string('password').notNullable();
   });
 }
 

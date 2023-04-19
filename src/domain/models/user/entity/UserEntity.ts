@@ -1,59 +1,81 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-empty-function */
 /* eslint-disable no-unused-vars */
 
-import { CreateUserRepository } from '../../../../application/interfaces/repositories/CreateUserRepository';
-import { FindUserByEmailRepository } from '../../../../application/interfaces/repositories/FindUserByEmailRepository';
+import { IUUIDGenerator } from '../../../../application/interfaces/helpers/IUUIDGenerator';
+import { IFindUserByEmailRepository } from '../../../../application/interfaces/repositories/IFindUserByEmailRepository';
+import { IPasswordHashing } from '../../../../application/interfaces/security/IPasswordHashing';
+
+interface UserProperties {
+  id?: string;
+  email: string,
+  firstName: string,
+  lastName: string,
+  password: string,
+}
 
 export class UserEntity {
-  private constructor(
-    private readonly id: string,
-    private readonly email: string,
-    private readonly firstName: string,
-    private readonly lastName: string,
-    private readonly passwordHash: string,
-    private readonly findUserByEmailRepository: FindUserByEmailRepository,
-  ) {}
+  private _id: string | undefined;
 
-  static create(
-    id: string,
-    email: string,
-    firstName: string,
-    lastName: string,
-    passwordHash: string,
-    findUserByEmailRepository: FindUserByEmailRepository,
-  ): UserEntity {
-    return new UserEntity(
-      id,
-      email,
-      firstName,
-      lastName,
-      passwordHash,
-      findUserByEmailRepository,
-    );
+  private _email: string;
+
+  private _firstName: string;
+
+  private _lastName: string;
+
+  private _password: string;
+
+  public constructor(
+    user: UserProperties,
+    private readonly findUserByEmailRepository: IFindUserByEmailRepository,
+    private readonly uuid: IUUIDGenerator,
+    private readonly passwordHashing: IPasswordHashing,
+  ) {
+    this._id = this.setId(user.id);
+    this._email = user.email;
+    this._firstName = user.firstName;
+    this._lastName = user.lastName;
+    this._password = this.setPassword(user);
   }
 
-  getId(): string {
-    return this.id;
+  public id(): string | undefined {
+    return this._id;
   }
 
-  getEmail(): string {
-    return this.email;
+  public email(): string {
+    return this._email;
   }
 
-  getFirstName(): string {
-    return this.firstName;
+  public firstName(): string {
+    return this._firstName;
   }
 
-  getLastName(): string {
-    return this.lastName;
+  public lastName(): string {
+    return this._lastName;
   }
 
-  getHashedPassword(): string {
-    return this.passwordHash;
+  public password(): string {
+    return this._password;
   }
 
-  async isUniqueEmail(): Promise<boolean> {
-    const existingUser = await this.findUserByEmailRepository.findByEmail(this.email);
+  private setId(id: string | undefined) {
+    if (id) {
+      return id;
+    }
+
+    return this.uuid.make();
+  }
+
+  private setPassword(user: UserProperties): string {
+    if (user.id) {
+      return user.password;
+    }
+
+    return this.passwordHashing.hash(user.password);
+  }
+
+  public async isUniqueEmail(): Promise<boolean> {
+    const existingUser = await this.findUserByEmailRepository.findByEmail(this._email);
 
     return !existingUser;
   }

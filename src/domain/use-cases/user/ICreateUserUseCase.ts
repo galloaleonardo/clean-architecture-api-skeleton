@@ -2,6 +2,6 @@
 import { CreateUserDataIncomplete } from '../../models/user/data/CreateUserDataIncomplete';
 import { User } from '../../models/user/User';
 
-export interface CreateUserUseCase {
+export interface ICreateUserUseCase {
   create(data: CreateUserDataIncomplete): Promise<User> | never
 }

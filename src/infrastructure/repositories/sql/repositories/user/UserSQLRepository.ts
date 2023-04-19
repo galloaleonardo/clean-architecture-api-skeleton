@@ -1,12 +1,12 @@
 import { RepositoryError } from '../../../../../application/errors/RepositoryError';
-import { CreateUserRepository } from '../../../../../application/interfaces/repositories/CreateUserRepository';
-import { FindUserByEmailRepository } from '../../../../../application/interfaces/repositories/FindUserByEmailRepository';
+import { ICreateUserRepository } from '../../../../../application/interfaces/repositories/ICreateUserRepository';
+import { IFindUserByEmailRepository } from '../../../../../application/interfaces/repositories/IFindUserByEmailRepository';
 import { CreateUserData } from '../../../../../domain/models/user/data/CreateUserData';
 import { User } from '../../../../../domain/models/user/User';
 import { ApplicationConfig } from '../../../../config/application-config';
 import { db } from '../../../../database/connection';
 
-export class UserSQLRepository implements CreateUserRepository, FindUserByEmailRepository {
+export class UserSQLRepository implements ICreateUserRepository, IFindUserByEmailRepository {
   private readonly table = ApplicationConfig.USERS_TABLE || 'users';
 
   async create(data: CreateUserData): Promise<User> {

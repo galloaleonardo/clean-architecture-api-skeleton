@@ -1,4 +1,4 @@
 /* eslint-disable no-unused-vars */
-export interface UUIDGenerator {
+export interface IUUIDGenerator {
   make(): string;
 }

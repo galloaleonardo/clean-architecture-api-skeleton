@@ -2,9 +2,9 @@ import {
   Request, Response, NextFunction,
 } from 'express';
 import { DefaultApplicationError } from '../../../application/errors/DefaultApplicationError';
-import { Controller } from '../../../application/interfaces/controllers/Controller';
+import { IController } from '../../../application/interfaces/controllers/IController';
 
-export const routeAdapter = <T>(controller: Controller<T>) => async (request: Request, response: Response, next: NextFunction) => Promise.resolve(
+export const routeAdapter = <T>(controller: IController<T>) => async (request: Request, response: Response, next: NextFunction) => Promise.resolve(
   controller.handle({
     query: request.query,
     params: request.params,
