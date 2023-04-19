@@ -1,6 +1,7 @@
 import {
   Request, Response, NextFunction,
 } from 'express';
+import { Logger } from '../../../main/factories/shared/logger';
 
 const getErrorMessage = (message: string): unknown => {
   try {
@@ -25,13 +26,26 @@ export function handleResponse(request: Request, response: Response, next: NextF
       const message = getErrorMessage(body.errorMessage);
 
       newResponse = {
-        data: message,
+        data: { error: message },
         timestamp: Date.now(),
         status: body?.errorType,
         statusCode: response.statusCode,
       };
+
+      switch (true) {
+        case response.statusCode >= 500:
+          Logger.error({ error: message });
+          break;
+
+        default:
+          Logger.warn({ error: message });
+          break;
+      }
+
+      return oldJson.call(response, newResponse);
     }
 
+    Logger.info({ data: body });
     return oldJson.call(response, newResponse);
   };
 
